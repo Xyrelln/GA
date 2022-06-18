@@ -32,3 +32,5 @@ def apply_function(individual):
     x, y, z = converted_dna
 
     return (2* x**2 - 3* y**2 - 4* x + 5* y + z)
+
+

@@ -12,24 +12,37 @@ def generate_population(size):
 def sort_population_by_fitness(population):
     return sorted(population, key=fitness_functions.apply_function)
 
-def choice_by_roulette(population):
+def choice_by_roulette(population, mode=max):
     offset = 0
     fitness_sum = 0
 
-    for individual in population:
-        fitness = fitness_functions.apply_function(individual)
-        fitness_sum += fitness
-        if fitness < offset:
-            offset = fitness
+    if mode == max:
+        for individual in population:
+            fitness = fitness_functions.apply_function(individual)
+            fitness_sum += fitness
+            if fitness < offset:
+                offset = fitness
+    else:
+        for individual in population:
+            fitness = -1 * fitness_functions.apply_function(individual)
+            fitness_sum += fitness
+            if fitness < offset:
+                offset = fitness
 
     fitness_sum += -1 * offset * len(population)
 
     roulette = []
     sum_proportion = 0
-    for individual in population:
-        proportion = (fitness_functions.apply_function(individual) - offset) / fitness_sum
-        sum_proportion += proportion
-        roulette.append(sum_proportion)
+    if mode == max:
+        for individual in population:
+            proportion = (fitness_functions.apply_function(individual) - offset) / fitness_sum
+            sum_proportion += proportion
+            roulette.append(sum_proportion)
+    else:
+        for individual in population:
+            proportion = (-1 * fitness_functions.apply_function(individual) - offset) / fitness_sum
+            sum_proportion += proportion
+            roulette.append(sum_proportion)
     
     draw = random.uniform(0, 1)
 
@@ -59,17 +72,26 @@ def mutate(individual, probability):
     return individual
 
 
-def make_next_generation(previous_population):
+def make_next_generation(previous_population, mode=max):
     next_generation = []
-    sorted_by_fitness_population = sort_population_by_fitness(previous_population)
+    # sorted_by_fitness_population = sort_population_by_fitness(previous_population)
     population_size = len(previous_population)
 
-    for i in range(population_size):
-        first_choice = choice_by_roulette(sorted_by_fitness_population)
-        second_choice = choice_by_roulette(sorted_by_fitness_population)
+    if mode == max:
+        for i in range(population_size):
+            first_choice = choice_by_roulette(previous_population, mode=max)
+            second_choice = choice_by_roulette(previous_population, mode=max)
 
-        individual = crossover(first_choice, second_choice)
-        individual = mutate(individual, 0.1)
-        next_generation.append(individual)
+            individual = crossover(first_choice, second_choice)
+            individual = mutate(individual, 0.1)
+            next_generation.append(individual)
+    else:
+        for i in range(population_size):
+            first_choice = choice_by_roulette(previous_population, mode=min)
+            second_choice = choice_by_roulette(previous_population, mode=min)
+
+            individual = crossover(first_choice, second_choice)
+            individual = mutate(individual, 0.1)
+            next_generation.append(individual)
 
     return next_generation
