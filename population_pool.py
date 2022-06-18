@@ -14,25 +14,29 @@ def sort_population_by_fitness(population):
 
 def choice_by_roulette(population):
     offset = 0
-    sorted_population = sort_population_by_fitness(population)
-    fitness_sum = sum(fitness_functions.apply_function(individual) for individual in population)
-    
-    normalized_fitness_sum = fitness_sum
-    lowest_fitness = fitness_functions.apply_function(sorted_population[0])
-    if lowest_fitness < 0:
-        offset = -lowest_fitness
-        normalized_fitness_sum += offset * len(sorted_population)
+    fitness_sum = 0
 
+    for individual in population:
+        fitness = fitness_functions.apply_function(individual)
+        fitness_sum += fitness
+        if fitness < offset:
+            offset = fitness
+
+    fitness_sum += -1 * offset * len(population)
+
+    roulette = []
+    sum_proportion = 0
+    for individual in population:
+        proportion = (fitness_functions.apply_function(individual) - offset) / fitness_sum
+        sum_proportion += proportion
+        roulette.append(sum_proportion)
+    
     draw = random.uniform(0, 1)
 
-    accumulated = 0
-    for individual in sorted_population:
-        fitness = fitness_functions.apply_function(individual) + offset
-        probability = fitness / normalized_fitness_sum
-        accumulated += probability
+    for index in range(len(population)):
+        if draw < roulette[index]:
+            return population[index]
 
-        if draw <= accumulated:
-            return individual
 
 
 def crossover(individual_a, individual_b):

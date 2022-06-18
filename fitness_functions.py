@@ -31,4 +31,4 @@ def apply_function(individual):
     converted_dna = dna_to_number(individual.dna)
     x, y, z = converted_dna
 
-    return (2* x**2 - 3* y**2 - 4* x + 5* y + z)**9
+    return (2* x**2 - 3* y**2 - 4* x + 5* y + z)
