@@ -6,7 +6,7 @@ import chromosome, fitness_functions, population_pool
 boundaries = (0, 15)
 generations = 100
 
-population = population_pool.generate_population(size=100, x_boundaries=boundaries, y_boundaries=boundaries, z_boundaries=boundaries)
+population = population_pool.generate_population(size=100)
 
 i = 1
 best_of_generation = []
@@ -20,7 +20,7 @@ while True:
 
     population = population_pool.make_next_generation(population)
 
-xpoints = range(100)
+xpoints = range(generations)
 plt.plot(xpoints, best_of_generation)
 plt.show()
 
