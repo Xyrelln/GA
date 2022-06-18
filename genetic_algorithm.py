@@ -1,7 +1,8 @@
-boundaries = (0, 16)
-
-
 import random
+
+
+boundaries = (0, 16)
+generations = 100
 
 def generate_population(size, x_boundaries, y_boundaries, z_boundaries):
     lower_x_boundary, upper_x_boundary = x_boundaries
@@ -94,25 +95,29 @@ def make_next_generation(previous_population):
 
     return next_generation
 
+import matplotlib.pyplot as plt
 
-
-generations = 100
-
-population = generate_population(size=10, x_boundaries=boundaries, y_boundaries=boundaries, z_boundaries=boundaries)
+population = generate_population(size=100, x_boundaries=boundaries, y_boundaries=boundaries, z_boundaries=boundaries)
 
 i = 1
+best_of_generation = []
 while True:
-    print(f"🧬 GENERATION {i}")
+    # print(f"🧬 GENERATION {i}")
 
-    for individual in population:
-        print(individual, apply_function(individual))
-
+    # for individual in population:
+    #    print(individual, apply_function(individual))
+    best_individual_of_generation = sort_population_by_fitness(population)[-1]
+    best_of_generation.append(apply_function(best_individual_of_generation))
     if i >= generations:
         break
 
     i += 1
 
     population = make_next_generation(population)
+
+xpoints = range(100)
+plt.plot(xpoints, best_of_generation)
+plt.show()
 
 best_individual = sort_population_by_fitness(population)[-1]
 print("\n🔬 FINAL RESULT")
