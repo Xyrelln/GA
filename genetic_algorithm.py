@@ -6,7 +6,7 @@ import chromosome, fitness_functions, population_pool
 boundaries = (0, 15)
 generations = 100
 
-population = population_pool.generate_population(size=100)
+population = population_pool.generate_population(size=10)
 
 
 max_of_generation = []
