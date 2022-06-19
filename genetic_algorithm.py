@@ -8,9 +8,11 @@ generations = 100
 
 population = population_pool.generate_population(size=100)
 
-i = 1
+
 max_of_generation = []
 min_of_generation = []
+
+i = 1
 while True:
     max_individual_of_generation = population_pool.sort_population_by_fitness(population)[-1]
     max_of_generation.append(fitness_functions.target(max_individual_of_generation))
@@ -32,14 +34,16 @@ while True:
 
     population = population_pool.make_next_generation(population, mode=min)
 
-xpoints = range(generations)
 
-plt.plot(xpoints, max_of_generation)
+plt.subplot(2, 1, 1)
+plt.plot(max_of_generation)
+
+plt.subplot(2, 1, 2)
+plt.plot(min_of_generation)
 plt.show()
 
-plt.plot(xpoints, min_of_generation)
-plt.show()
-
-best_individual = population_pool.sort_population_by_fitness(population)[-1]
+max_individual = population_pool.sort_population_by_fitness(population)[-1]
+min_individual = population_pool.sort_population_by_fitness(population)[0]
 print("\n🔬 FINAL RESULT")
-print(best_individual.dna, fitness_functions.target(best_individual))    
+print("Max: " + dna_to_number(max_individual.dna), fitness_functions.target(max_individual))    
+print("Min: " + dna_to_number(min_individual.dna), fitness_functions.target(min_individual))  
